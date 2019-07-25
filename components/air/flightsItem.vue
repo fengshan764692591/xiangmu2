@@ -47,7 +47,7 @@
             </el-col>
             <el-col :span="5" class="price">￥{{data.par_price}}</el-col>
             <el-col :span="3" class="choose-button">
-              <el-button type="warning" size="mini">选定</el-button>
+              <el-button type="warning" size="mini" @click="handleToOrder(data.id,item.seat_xid)">选定</el-button>
               <p>剩余：{{item.discount}}</p>
             </el-col>
           </el-row>
@@ -73,21 +73,31 @@ export default {
     };
   },
   computed: {
-    rankTime(){
+    rankTime() {
       // 先转换为分钟
-      const dep = this.data.dep_time.split(":")
-      const arr = this.data.arr_time.split(":")
-      const depval = dep[0]*60 + +dep[1]
-      const arrval = arr[0]*60 + +arr[1]
+      const dep = this.data.dep_time.split(":");
+      const arr = this.data.arr_time.split(":");
+      const depval = dep[0] * 60 + +dep[1];
+      const arrval = arr[0] * 60 + +arr[1];
       // 到达的时间
-      let  dis = arrval - depval
+      let dis = arrval - depval;
       // 判断一下
-      if(dis < 0){
-         dis = arrval +24 * 60 - depval
+      if (dis < 0) {
+        dis = arrval + 24 * 60 - depval;
       }
-      return `${Math.floor(dis/60)}时${dis%60}`
+      return `${Math.floor(dis / 60)}时${dis % 60}`;
     }
-  
+  },
+  methods: {
+    handleToOrder(id, seat_xid) {
+      this.$router.push({
+        path: "/air/order",
+        query: {
+          id,
+          seat_xid
+        }
+      });
+    }
   }
 };
 </script>

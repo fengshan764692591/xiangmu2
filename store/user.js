@@ -1,4 +1,4 @@
-import { mapState, mapMutations } from "vuex";
+
 
 // nuxt已经把store（vuex）关联到应用，只需要维护各个模块，
 // 每个模块下面通常需要暴露三个属性
@@ -56,5 +56,23 @@ export const actions = {
     },
 
     // 注册
-    register(){}
+    register(){},
+	//  发送手机验证码
+	sendCode(store,phoneNumber){
+    // 发送手机的验证码
+	return	this.$axios({
+			url: "/captchas",
+			method: "POST",
+			data: {
+					tel: phoneNumber
+			}
+	}).then(res => {
+			// const code = res.data.code;
+			const {code} = res.data;
+			return code
+
+	})
+
+	}
+
 }

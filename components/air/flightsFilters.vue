@@ -18,10 +18,9 @@
         </el-select>
       </el-col>
       <el-col :span="4">
-       <!--  :label数据要动态绑定 -->
-			  <el-select size="mini" v-model="flightTimes" placeholder="起飞时间" @change="handleFlightTimes">
+        <!--  :label数据要动态绑定 -->
+        <el-select size="mini" v-model="flightTimes" placeholder="起飞时间" @change="handleFlightTimes">
           <el-option
-			
             :label="`${item.from}:00 -${item.to}:00`"
             :value="item"
             v-for="(item,index) in data.options.flightTimes"
@@ -44,7 +43,7 @@
           <el-option
             :label="item.name"
             :value="item.value"
-            v-for="(item,index) in data.options.optionSize"
+            v-for="(item,index) in optionSize"
             :key="index"
           ></el-option>
         </el-select>
@@ -80,20 +79,51 @@ export default {
     };
   },
   methods: {
-    // 选择机场时候触发
-    handleAirport(value) {},
+    // 选择机场时候触发,filter过滤
+    handleAirport(value) {
+      const arr = this.data.flights.filter(v => {
+      return  v.org_airport_name === value;
+      });
+      this.$emit("setDataList", arr);
+    },
 
     // 选择出发时间时候触发
-    handleFlightTimes(value) {},
+    handleFlightTimes(value) {
+      // console.log(value)
+     const arr = this.data.flights
+     .filter(v =>{
+       return value.from <= +v.dep_time.split(":")[0] && value.to >= +v.dep_time.split(":")[0]
+     })
+      this.$emit("setDataList",arr)
+    },
 
     // 选择航空公司时候触发
-    handleCompany(value) {},
+    handleCompany(value) {
+      // console.log(value)
+  const arr = this.data.flights.filter(v =>{
+  return  v.airline_name === value
+    // console.log(this.arr)
+  })
+  this.$emit("setDataList",arr)
+     
+    },
 
     // 选择机型时候触发
-    handleAirSize(value) {},
+    handleAirSize(value) {
+   const arr = this.data.flights.filter(v =>{
+     return v.plane_size === value
+   })
+   this.$emit("setDataList",arr)
+    },
 
     // 撤销条件时候触发
-    handleFiltersCancel() {}
+    handleFiltersCancel() {
+      this.airport = "",
+      this.flightTimes = "",
+      this.company = "",
+      this.optionSize =""
+      this.$emit("setDataList",this.data.flights)
+    }
   }
 };
 </script>
